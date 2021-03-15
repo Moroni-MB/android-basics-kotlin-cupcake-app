@@ -30,7 +30,7 @@
     <string name="next">Next</string>
     <string name="choose_pickup_date">Choose Pickup Date</string>
     <string name="order_summary">Order Summary</string>
-    <string name="send">Send Order to Another App</string>
+    <string name="send">Place Order</string>
     <string name="quantity">Quantity</string>
     <string name="flavor">Flavor</string>
     <string name="pickup_date">Pickup date</string>
@@ -43,4 +43,5 @@
         <item quantity="one">%d cupcake</item>
         <item quantity="other">%d cupcakes</item>
     </plurals>
+    <string name="cupcake_notification_channel_id" translatable="false">cupcake_channel</string>
 </resources>
