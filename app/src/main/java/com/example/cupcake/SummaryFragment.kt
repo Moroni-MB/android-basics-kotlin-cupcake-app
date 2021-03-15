@@ -15,16 +15,21 @@
  */
 package com.example.cupcake
 
-import android.content.Intent
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cupcake.databinding.FragmentSummaryBinding
 import com.example.cupcake.model.OrderViewModel
+import com.example.cupcake.utils.sendNotification
 
 /**
  * [SummaryFragment] contains a summary of the order details with a button to share the order
@@ -43,11 +48,45 @@ class SummaryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+        ): View?
+    {
         val fragmentBinding = FragmentSummaryBinding.inflate(inflater, container, false)
         binding = fragmentBinding
-        return fragmentBinding.root
+        createChannel(
+        getString(R.string.cupcake_notification_channel_id),
+        getString(R.string.app_name)
+    )
+
+    return fragmentBinding.root
+}
+
+private fun createChannel(channelId: String, channelName: String) {
+    // TODO: Step 1.6 START create a channel
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val notificationChannel = NotificationChannel(
+            channelId,
+            channelName,
+            // TODO: Step 2.4 change importance
+            NotificationManager.IMPORTANCE_HIGH
+        )// TODO: Step 2.6 disable badges for this channel
+            .apply {
+                setShowBadge(false)
+            }
+
+        notificationChannel.enableLights(true)
+        notificationChannel.lightColor = Color.RED
+        notificationChannel.enableVibration(true)
+        notificationChannel.description = ""
+
+        val notificationManager = requireActivity().getSystemService(
+            NotificationManager::class.java
+        )
+        notificationManager.createNotificationChannel(notificationChannel)
+
     }
+    // TODO: Step 1.6 END create a channel
+}
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,7 +101,8 @@ class SummaryFragment : Fragment() {
     /**
      * Submit the order by sharing out the order details to another app via an implicit intent.
      */
-    fun sendOrder() {
+    fun sendOrder()
+    {
         // Construct the order summary text with information from the view model
         val numberOfCupcakes = sharedViewModel.quantity.value ?: 0
         val orderSummary = getString(
@@ -73,26 +113,28 @@ class SummaryFragment : Fragment() {
             sharedViewModel.price.value.toString()
         )
 
-        // Create an ACTION_SEND implicit intent with order details in the intent extras
-        val intent = Intent(Intent.ACTION_SEND)
-            .setType("text/plain")
-            .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.new_cupcake_order))
-            .putExtra(Intent.EXTRA_TEXT, orderSummary)
+        //So f**king stupid
+        val notif = ContextCompat.getSystemService(MainActivity.appContext, NotificationManager::class.java)
 
-        // Check if there's an app that can handle this intent before launching it
-        if (activity?.packageManager?.resolveActivity(intent, 0) != null) {
-            // Start a new activity with the given intent (this may open the share dialog on a
-            // device if multiple apps can handle this intent)
-            startActivity(intent)
+        if (notif != null)
+        {
+            notif.sendNotification(orderSummary, MainActivity.appContext)
         }
     }
 
     /**
      * Cancel the order and start over.
      */
-    fun cancelOrder() {
+    fun cancelOrder()
+    {
         // Reset order in view model
         sharedViewModel.resetOrder()
+
+        val notif = ContextCompat.getSystemService(MainActivity.appContext, NotificationManager::class.java)
+        if (notif != null)
+        {
+            notif.sendNotification("Your order was canceled", MainActivity.appContext)
+        }
 
         // Navigate back to the [StartFragment] to start over
         findNavController().navigate(R.id.action_summaryFragment_to_startFragment)
