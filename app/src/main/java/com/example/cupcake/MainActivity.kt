@@ -15,6 +15,7 @@
  */
 package com.example.cupcake
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -38,6 +39,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         // Set up the action bar for use with the NavController
         setupActionBarWithNavController(navController)
+
+        //no
+        appContext = this
     }
 
     /**
@@ -46,4 +50,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
+    //Because f**king notifications and im lazy, never do this
+    companion object
+    {
+        lateinit var appContext : Context
+    }
+
 }
