@@ -115,7 +115,8 @@ private fun createChannel(channelId: String, channelName: String) {
 
         //So f**king stupid
         val notif = ContextCompat.getSystemService(MainActivity.appContext, NotificationManager::class.java)
-
+        
+        //send the notification using the sendNotification helper method in NotificationUtils
         if (notif != null)
         {
             notif.sendNotification(orderSummary, MainActivity.appContext)
@@ -129,7 +130,8 @@ private fun createChannel(channelId: String, channelName: String) {
     {
         // Reset order in view model
         sharedViewModel.resetOrder()
-
+        
+        //we do this dumbness again
         val notif = ContextCompat.getSystemService(MainActivity.appContext, NotificationManager::class.java)
         if (notif != null)
         {
