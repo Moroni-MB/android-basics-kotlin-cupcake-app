@@ -113,7 +113,7 @@ private fun createChannel(channelId: String, channelName: String) {
             sharedViewModel.price.value.toString()
         )
 
-        //So f**king stupid
+        //very bad
         val notif = ContextCompat.getSystemService(MainActivity.appContext, NotificationManager::class.java)
         
         //send the notification using the sendNotification helper method in NotificationUtils
