@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         // Set up the action bar for use with the NavController
         setupActionBarWithNavController(navController)
 
-        //no
+        //sets appContext to this instance of MainActivity
         appContext = this
     }
 
@@ -51,7 +51,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    //Because f**king notifications and im lazy, never do this
+    //this is not good, never do this. This makes me sad
+    //the reason i have this is because im too lazy to figure
+    //out a better way to do this.
+    //in short, we save the instance of the MainActivity's Context
+    //so we can use it to send notifications
     companion object
     {
         lateinit var appContext : Context
